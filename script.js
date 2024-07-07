@@ -9,6 +9,11 @@ let inventory = ["stick"];
 const button1 = document.querySelector('#button1');
 const button2 = document.querySelector("#button2");
 const button3 = document.querySelector("#button3");
+const button4 = document.querySelector("#button4");
+const eqStats = document.querySelector("#eqStats");
+const weaponName = document.querySelector("#weaponName");
+const power = document.querySelector("#power");
+const inventoryText = document.querySelector("#inventory");
 const text = document.querySelector("#text");
 const xpText = document.querySelector("#xpText");
 const healthText = document.querySelector("#healthText");
@@ -87,6 +92,12 @@ const locations = [
     "button text": ["2", "8", "Go to town square?"],
     "button functions": [pickTwo, pickEight, goTown],
     text: "You find a secret game. Pick a number above. Ten numbers will be randomly chosen between 0 and 10. If the number you choose matches one of the random numbers, you win!"
+  },
+  {
+    name: 'equipment',
+    "button text": ["Go to store", "Go to cave", "Go to town square?"],
+    "button functions": [goStore, goCave, goTown],
+    text: 'This is your equipment'
   }
 ];
 
@@ -94,9 +105,11 @@ const locations = [
 button1.onclick = goStore;
 button2.onclick = goCave;
 button3.onclick = fightDragon;
+button4.onclick = showEQ;
 
 function update(location) {
   monsterStats.style.display = "none";
+  eqStats.style.display = "none";
   button1.innerText = location["button text"][0];
   button2.innerText = location["button text"][1];
   button3.innerText = location["button text"][2];
@@ -104,6 +117,16 @@ function update(location) {
   button2.onclick = location["button functions"][1];
   button3.onclick = location["button functions"][2];
   text.innerHTML = location.text;
+  button4.style.display = "inline-block";
+}
+
+function showEQ() {
+  update(locations[8]);
+  button4.style.display = "none";
+  weaponName.innerText = weapons[currentWeapon].name;
+  power.innerText = weapons[currentWeapon].power;
+  inventoryText.innerText = inventory;
+  eqStats.style.display = "flex";
 }
 
 function goTown() {
