@@ -1,3 +1,4 @@
+//generalyStats
 let xp = 0;
 let health = 100;
 let gold = 50;
@@ -10,23 +11,28 @@ const button1 = document.querySelector('#button1');
 const button2 = document.querySelector("#button2");
 const button3 = document.querySelector("#button3");
 const button4 = document.querySelector("#button4");
+
 const eqStats = document.querySelector("#eqStats");
 const weaponName = document.querySelector("#weaponName");
 const power = document.querySelector("#power");
 const inventoryText = document.querySelector("#inventory");
+
 const text = document.querySelector("#text");
 const xpText = document.querySelector("#xpText");
 const healthText = document.querySelector("#healthText");
 const goldText = document.querySelector("#goldText");
+
 const monsterStats = document.querySelector("#monsterStats");
 const monsterName = document.querySelector("#monsterName");
 const monsterHealthText = document.querySelector("#monsterHealth");
+
 const weapons = [
   { name: 'stick', power: 5 },
   { name: 'dagger', power: 30 },
   { name: 'claw hammer', power: 50 },
   { name: 'sword', power: 100 }
 ];
+
 const monsters = [
   {
     name: "slime",
@@ -44,6 +50,7 @@ const monsters = [
     health: 300
   }
 ]
+
 const locations = [
   {
     name: "town square",
@@ -107,6 +114,7 @@ button2.onclick = goCave;
 button3.onclick = fightDragon;
 button4.onclick = showEQ;
 
+//functions
 function update(location) {
   monsterStats.style.display = "none";
   eqStats.style.display = "none";
@@ -117,7 +125,6 @@ function update(location) {
   button2.onclick = location["button functions"][1];
   button3.onclick = location["button functions"][2];
   text.innerHTML = location.text;
-  button4.style.display = "inline-block";
 }
 
 function showEQ() {
@@ -131,14 +138,17 @@ function showEQ() {
 
 function goTown() {
   update(locations[0]);
+  button4.style.display = "inline-block";
 }
 
 function goStore() {
   update(locations[1]);
+  button4.style.display = "none";
 }
 
 function goCave() {
   update(locations[2]);
+  button4.style.display = "none";
 }
 
 function buyHealth() {
@@ -184,6 +194,7 @@ function sellWeapon() {
   }
 }
 
+//select monster and go fight
 function fightSlime() {
   fighting = 0;
   goFight();
@@ -207,6 +218,7 @@ function goFight() {
   monsterHealthText.innerText = monsterHealth;
 }
 
+//battle logic
 function attack() {
   text.innerText = "The " + monsters[fighting].name + " attacks.";
   text.innerText += " You attack it with your " + weapons[currentWeapon].name + ".";
@@ -247,6 +259,7 @@ function dodge() {
   text.innerText = "You dodge the attack from the " + monsters[fighting].name;
 }
 
+//fight contest
 function defeatMonster() {
   gold += Math.floor(monsters[fighting].level * 6.7);
   xp += monsters[fighting].level;
@@ -275,6 +288,7 @@ function restart() {
   goTown();
 }
 
+//easterEgg
 function easterEgg() {
   update(locations[7]);
 }
