@@ -7,6 +7,7 @@ let fighting;
 let monsterHealth;
 let inventory = ["stick"];
 
+//
 const button1 = document.querySelector('#button1');
 const button2 = document.querySelector("#button2");
 const button3 = document.querySelector("#button3");
@@ -26,11 +27,12 @@ const monsterStats = document.querySelector("#monsterStats");
 const monsterName = document.querySelector("#monsterName");
 const monsterHealthText = document.querySelector("#monsterHealth");
 
+//objects
 const weapons = [
-  { name: 'stick', power: 5 },
-  { name: 'dagger', power: 30 },
-  { name: 'claw hammer', power: 50 },
-  { name: 'sword', power: 100 }
+  { name: 'stick', power: 5, prize: 30},
+  { name: 'dagger', power: 30, prize: 36},
+  { name: 'claw hammer', power: 50, prize: 45},
+  { name: 'sword', power: 100, prize: 60}
 ];
 
 const monsters = [
@@ -60,7 +62,7 @@ const locations = [
   },
   {
     name: "store",
-    "button text": ["Buy 10 health (10 gold)", "Buy weapon (30 gold)", "Go to town square"],
+    "button text": ["Buy 10 health (10 gold)", "Buy weapon", "Go to town square"],
     "button functions": [buyHealth, buyWeapon, goTown],
     text: "You enter the store."
   },
@@ -114,7 +116,7 @@ button2.onclick = goCave;
 button3.onclick = fightDragon;
 button4.onclick = showEQ;
 
-//functions
+//movement functions
 function update(location) {
   monsterStats.style.display = "none";
   eqStats.style.display = "none";
@@ -144,6 +146,7 @@ function goTown() {
 function goStore() {
   update(locations[1]);
   button4.style.display = "none";
+  button2.innerText = "Buy weapon (" + weapons[currentWeapon + 1].prize + " gold)";
 }
 
 function goCave() {
@@ -151,12 +154,14 @@ function goCave() {
   button4.style.display = "none";
 }
 
+//store functions
 function buyHealth() {
   if (gold >= 10) {
     gold -= 10;
     health += 10;
     goldText.innerText = gold;
     healthText.innerText = health;
+    text.innerText = "You get +10HP!";
   } else {
     text.innerText = "You do not have enough gold to buy health.";
   }
@@ -164,14 +169,15 @@ function buyHealth() {
 
 function buyWeapon() {
   if (currentWeapon < weapons.length - 1) {
-    if (gold >= 30) {
-      gold -= 30;
+    if (gold >= weapons[currentWeapon + 1].prize) {
+      gold -= weapons[currentWeapon + 1].prize;
       currentWeapon++;
       goldText.innerText = gold;
       let newWeapon = weapons[currentWeapon].name;
       text.innerText = "You now have a " + newWeapon + ".";
       inventory.push(newWeapon);
       text.innerText += " In your inventory you have: " + inventory;
+      button2.innerText = "Buy weapon (" + weapons[currentWeapon + 1].prize + " gold)";
     } else {
       text.innerText = "You do not have enough gold to buy a weapon.";
     }
@@ -216,6 +222,7 @@ function goFight() {
   monsterStats.style.display = "block";
   monsterName.innerText = monsters[fighting].name;
   monsterHealthText.innerText = monsterHealth;
+  button4.style.display = "none";
 }
 
 //battle logic
