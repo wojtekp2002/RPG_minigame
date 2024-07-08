@@ -3,10 +3,11 @@ let xp = 0;
 let health = 100;
 let gold = 50;
 let currentWeapon = 0;
+let currentArmor = 0;
 let fighting;
 let monsterHealth;
 let inventory = ["stick"];
-
+let wardrobe = ["torn robe"]
 //
 const button1 = document.querySelector('#button1');
 const button2 = document.querySelector("#button2");
@@ -17,6 +18,9 @@ const eqStats = document.querySelector("#eqStats");
 const weaponName = document.querySelector("#weaponName");
 const power = document.querySelector("#power");
 const inventoryText = document.querySelector("#inventory");
+const armorName = document.querySelector("#armorName");
+const armor = document.querySelector("#armor");
+const wardrobeText = document.querySelector("#wardrobe");
 
 const text = document.querySelector("#text");
 const xpText = document.querySelector("#xpText");
@@ -34,6 +38,14 @@ const weapons = [
   { name: 'claw hammer', power: 50, prize: 45},
   { name: 'sword', power: 100, prize: 60}
 ];
+
+const armors = [
+  {name: 'torn robe', armor: 0, prize: 20},
+  {name: 'leather armor', armor: 25, prize: 28},
+  {name: 'knight armor', armor: 50, prize: 36},
+  {name: 'enchanted robe', armor: 75, prize: 45},
+  {name: 'god armor', armor: 100, prize: 60},
+]
 
 const monsters = [
   {
@@ -62,7 +74,7 @@ const locations = [
   },
   {
     name: "store",
-    "button text": ["Buy 10 health (10 gold)", "Buy weapon", "Go to town square"],
+    "button text": ["Buy armor", "Buy weapon", "Go to town square"],
     "button functions": [buyHealth, buyWeapon, goTown],
     text: "You enter the store."
   },
@@ -135,18 +147,26 @@ function showEQ() {
   weaponName.innerText = weapons[currentWeapon].name;
   power.innerText = weapons[currentWeapon].power;
   inventoryText.innerText = inventory;
+  armorName.innerText = armors[currentArmor].name;
+  armor.innerText = armors[currentArmor].armor;
+  wardrobeText.innerText = wardrobe;
   eqStats.style.display = "flex";
 }
 
 function goTown() {
   update(locations[0]);
   button4.style.display = "inline-block";
+  button4.onclick = showEQ;
+  button4.innerText = "Equipment B)";
 }
 
 function goStore() {
   update(locations[1]);
-  button4.style.display = "none";
+  button4.style.display = "nline-block";
+  button4.innerText = "Heal yourself (20 gold)";
+  button4.onclick = heal;
   button2.innerText = "Buy weapon (" + weapons[currentWeapon + 1].prize + " gold)";
+  button1.innerText = "Buy armor (" + armors[currentArmor + 1].prize + " gold)";
 }
 
 function goCave() {
@@ -155,15 +175,39 @@ function goCave() {
 }
 
 //store functions
-function buyHealth() {
-  if (gold >= 10) {
-    gold -= 10;
-    health += 10;
+function heal() {
+  if(gold > 20) {
+    gold -= 20;
     goldText.innerText = gold;
+    health = 100 + armors[currentArmor].armor;
     healthText.innerText = health;
-    text.innerText = "You get +10HP!";
+    text.innerText = "You have been healed";
   } else {
-    text.innerText = "You do not have enough gold to buy health.";
+    text.innerText = "You don't have enaught money!"
+  }
+}
+
+function buyHealth() {
+  if (currentArmor < armors.length - 1) {
+    if (gold >= armors[currentArmor + 1].prize) {
+      gold -= armors[currentArmor + 1].prize;
+      currentArmor++;
+      health += armors[currentArmor].armor;
+      healthText.innerText = health;
+      goldText.innerText = gold;
+      let newArmor = armors[currentArmor].name;
+      text.innerText = "You now have a " + newArmor + ".\n";
+      wardrobe.push(newArmor);
+      text.innerText += " In your wardrobe you have: " + wardrobe + "\n";
+      text.innerText += "You get +" + armors[currentArmor].armor + "HP";
+      button1.innerText = "Buy armor (" + armors[currentArmor + 1].prize + " gold)";
+    } else {
+      text.innerText = "You do not have enough gold to buy a armor.";
+    }
+  } else {
+    text.innerText = "You already have the most powerful armor!";
+    button2.innerText = "Sell armor for 15 gold";
+    button2.onclick = sellArmor;
   }
 }
 
@@ -185,6 +229,18 @@ function buyWeapon() {
     text.innerText = "You already have the most powerful weapon!";
     button2.innerText = "Sell weapon for 15 gold";
     button2.onclick = sellWeapon;
+  }
+}
+
+function sellArmor() {
+  if (wardrobe.length > 1) {
+    gold += 15;
+    goldText.innerText = gold;
+    let currentArmor = wardrobe.shift();
+    text.innerText = "You sold a " + currentArmor + ".";
+    text.innerText += " In your wardrobe you have: " + wardrobe;
+  } else {
+    text.innerText = "Don't sell your only armor!";
   }
 }
 
